@@ -1,0 +1,53 @@
+#!/usr/bin/env bash
+
+#Make sure a bucket name is given
+if [ -z "$1" ];
+ then
+  echo "USAGE: s3du BUCKETNAME [k,m,g]"
+  exit 1
+ else
+  bucket=$1
+  convert_size=$2
+fi
+
+#function to perform basic byte conversion to kb, mb, or gb
+convert ()
+ {
+ output_format=$1
+ target_value=$2
+ shift;
+ shift;
+ IGNORED=$@
+
+
+ case "$output_format" in
+  k)
+   bucket_size="$(( $target_value / 1024 ))"
+   echo "$bucket_size"
+   ;;
+  m)
+   kb="$(( $target_value / 1024 ))"
+   bucket_size="$(( $kb / 1024 ))"
+   echo "$bucket_size"
+   ;;
+  g)
+   kb="$(( $target_value / 1024 ))"
+   mb="$(( $kb / 1024 ))"
+   bucket_size="$(( $mb / 1024 ))"
+   echo "$bucket_size"
+   ;;
+  *)
+   echo "Returning size in bytes because k,m,g not defined properly"
+   bucket_size=$target_value
+   echo "$bucket_size"
+   ;;
+  esac
+
+
+ }
+
+#This line gets the size of the given bucket in bytes
+bytesize=`aws s3api list-objects --bucket $bucket --output json --query "[sum(Contents[].Size)]" | sed '2q;d' | sed -e 's/^[ \t]*//'`
+
+#This line passes the bucket's byte size and conversion type to the convert function
+convert $convert_size $bytesize
