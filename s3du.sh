@@ -11,8 +11,8 @@
 #  REQUIREMENTS:  -aws cli, s3api
 #          BUGS:  ---
 #         NOTES:  ---
-#        AUTHOR:  Troy C. Thompson (), troy.thompson@cognitivenetworks.com
-#       COMPANY:  Cognitive Networks
+#        AUTHOR:  Troy C. Thompson (), troy.thompson@progressfin.com
+#       COMPANY:  Nonagon Media
 #       VERSION:  1.0
 #       CREATED:  12/26/2014 11:37:12 AM PST
 #      REVISION:  1
