@@ -15,16 +15,23 @@
 #       COMPANY:  Nonagon Media
 #       VERSION:  1.0
 #       CREATED:  12/26/2014 11:37:12 AM PST
-#      REVISION:  1
+#      REVISION:  2
 #===============================================================================
 
 #Make sure a bucket name is given
 if [ -z "$1" ]; then
-  echo "USAGE: s3du BUCKETNAME [k|m|g"
+  echo "USAGE: s3du BUCKETNAME [b|k|m|g]"
   exit 1
 else
   bucket=$1
   convert_size=$2
+fi
+
+#Make sure a conversion size is selected
+if [ -z "$2" ]; then
+  echo "Using bytes because no conversion size was given"
+  bucket=$1
+  convert_size='b'
 fi
 
 
@@ -45,6 +52,9 @@ output_format=$1
 
 
  case "$output_format" in
+  b)
+   echo "$target_value"
+   ;;
   k)  
    bucket_size="$(( $target_value / 1024 ))" 
    echo "$bucket_size"
@@ -59,11 +69,11 @@ output_format=$1
    mb="$(( $kb / 1024 ))" 
    bucket_size="$(( $mb / 1024 ))" 
    echo "$bucket_size"
-   ;;  
-  *)  
-   echo "Returning size in bytes because k,m,g not defined properly"
-   bucket_size=$target_value
-   echo "$bucket_size"
+   ;; 
+  *) 
+   echo "Incorrect value given for the conversion size"
+   echo "USAGE: s3du BUCKETNAME [b|k|m|g]" 
+   exit 1
    ;;  
   esac
 }    # ----------  end of function convert  ----------
